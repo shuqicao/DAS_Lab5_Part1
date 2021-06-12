@@ -3,5 +3,47 @@ title: "My Report"
 author: "Shuqi Cao"
 date: "2021/6/12"
 output: github_document
+fig_caption: yes
 ---
 
+```{r loadpackages, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(moderndive)
+library(gapminder)
+library(skimr)
+```
+
+# Simple linear regression with one numerical explanatory variable
+
+## Exploratory data analysis
+
+```{r evals, echo = TRUE, eval = TRUE, warning = FALSE}
+evals.scores <- evals %>% select(score, bty_avg)
+evals.scores
+```
+
+## Correlation
+
+```{r corr, echo = TRUE, eval = TRUE, warning = FALSE}
+evals.scores %>% 
+  get_correlation(formula = score ~ bty_avg)
+ggplot(evals.scores, aes(x = bty_avg, y = score)) +
+  geom_point() +
+  labs(x="Beauty Score",y="Teaching Score",
+       title="Relationship between teaching and beauty scores")
+```
+
+## Formal Analysis
+
+```{r fal, echo = TRUE, eval = TRUE, warning = FALSE}
+model <- lm(score ~ bty_avg, data = evals.scores)
+model
+ggplot(evals.scores, aes(x = bty_avg, y = score)) +
+  geom_point() +
+  labs(x = "Beauty Score", y = "Teaching Score", 
+       title = "Relationship of teaching and beauty scores") +
+  geom_smooth(method = "lm", se = FALSE)
+regression.points <- get_regression_points(model)
+regression.points
+```
